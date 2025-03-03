@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Logs and databases
+*.log
+db.sqlite3
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
+
+# PyCharm settings
+.idea/
+
+# Environment variables
+.env
+*.env
+
+# Cache files
+*.cache/
+*.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# MyPy type checker
+.mypy_cache/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+
+# Other IDE files
+*.iml
+*.sublime-workspace
+
+
+# Media files
+*.mp4
+*.mp3
