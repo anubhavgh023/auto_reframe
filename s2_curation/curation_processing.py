@@ -22,7 +22,7 @@ import os
 # import os
 
 
-def curation_processing():
+def curation_processing(duration:int,numOfShorts:int):
     # Step 1: Extract audio from input video
     # extract_audio("../downloads/input_video.mp4", "./assets/audio/full_audio.wav")
 
@@ -41,7 +41,7 @@ def curation_processing():
     extract_audio(video_path, audio_output_path)
     
     # Step 2: chunk the audio file 
-    chunk_audio(60)
+    chunk_audio(duration)
     
     # Step 3: Extract frames and process chunks
     if process_chunks():
@@ -58,10 +58,10 @@ def curation_processing():
     process_transcript_main()
     
     # Step 6: Extract Video Transcript Segments based on score 
-    curation()
+    curation(numOfShorts=numOfShorts)
 
     # Step 7: Extract/crop out the selected video segments using ffmpeg
     extract_video_segments()
 
 if __name__ == "__main__":
-    curation_processing()
+    curation_processing(60,2)

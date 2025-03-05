@@ -12,7 +12,7 @@ score_dir = os.path.join(script_dir, "assets/scores")
 
 
 # SCORE ANALYZER RANKER
-def rank_chunk_scores(directory=score_dir, max_size=5):
+def rank_chunk_scores(max_size:int,directory=score_dir):
     """
     Read JSON files in the specified directory, extract TotalScore,
     and create a ranking dictionary sorted in descending order.
@@ -131,9 +131,9 @@ def extract_video_segments(selected_transcripts):
     return video_segments
 
 
-def curation():
+def curation(numOfShorts:int):
     # step 1
-    ranking = rank_chunk_scores(max_size=5)
+    ranking = rank_chunk_scores(max_size=numOfShorts)
     print("Top 2 Chunk Score Ranking:")
     for filename, score in ranking.items():
         print(f"{filename}: {score}")
@@ -151,4 +151,4 @@ def curation():
         json.dump(segments, json_file, indent=4)
     
 if __name__ == "__main__":
-    curation()
+    curation(2)
