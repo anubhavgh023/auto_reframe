@@ -3,9 +3,10 @@ FROM python:3.10
 # Set working directory inside the container
 WORKDIR /app
 
-# Install system dependencies (e.g., ffmpeg for moviepy and yt-dlp)
+# Install system dependencies (ffmpeg and imagemagick)
 RUN apt-get update && apt-get install -y \
     ffmpeg \
+    imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file first (optimization for caching)

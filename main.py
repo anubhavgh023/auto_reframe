@@ -96,7 +96,6 @@ async def process_video(request: VideoRequest):
         # # Step 3: Generate transitions and process videos
         print("Generating transition data...")
         generate_transitions_json()
-
         print("\nProcessing videos...")
         process_videos()
 
@@ -111,18 +110,6 @@ async def process_video(request: VideoRequest):
         # # Step 6: Clean up
         clean_files()
 
-        # Collect list of final videos
-        final_videos = []
-        if os.path.exists(FINAL_OUTPUT_DIR):
-            final_videos = [
-                os.path.join(FINAL_OUTPUT_DIR, f)
-                for f in os.listdir(FINAL_OUTPUT_DIR)
-                if f.startswith("final_vid_with_bg_") and f.endswith(".mp4")
-            ]
-            final_videos.sort()  # Sort to maintain order (1, 2, 3, ...)
-        else:
-            print(f"Warning: Final output directory {FINAL_OUTPUT_DIR} not found")
-
         return {
             "status": "success",
             "message": "Video processed successfully",
@@ -130,7 +117,6 @@ async def process_video(request: VideoRequest):
             "duration": request.duration,
             "language": request.language,
             "font_style": request.fontStyle,
-            "final_videos": final_videos,  # Added list of final video paths
         }
 
     except Exception as e:

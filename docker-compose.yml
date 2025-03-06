@@ -8,5 +8,7 @@ services:
       - "8000:8000"
     volumes:
       - ./downloads:/app/downloads
+      - ./s2_curation:/app/s2_curation
+      - ./s3_obj_detect_crop:/app/s3_obj_detect_crop
     environment:
       - PYTHONUNBUFFERED=1
