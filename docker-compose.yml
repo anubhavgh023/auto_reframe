@@ -10,5 +10,7 @@ services:
       - ./downloads:/app/downloads
       - ./s2_curation:/app/s2_curation
       - ./s3_obj_detect_crop:/app/s3_obj_detect_crop
+      - ./s4_add_subtitle:/app/s4_add_subtitle
+      - ./s5_bg_music_adder:/app/s5_bg_music_adder
     environment:
       - PYTHONUNBUFFERED=1

@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy a custom ImageMagick policy file to allow necessary operations
+COPY policy.xml /etc/ImageMagick-6/policy.xml
+
 # Copy requirements file first (optimization for caching)
 COPY requirements.txt .
 

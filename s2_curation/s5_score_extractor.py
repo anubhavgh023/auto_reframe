@@ -166,6 +166,11 @@ from functools import partial
 # Load environment variables
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
+print("----------------------------------")
+print("----------------------------------")
+print(API_KEY)
+print("----------------------------------")
+print("----------------------------------")
 
 # Paths
 # Get the directory of the current script

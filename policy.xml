@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policymap [
+  <!ELEMENT policymap (policy)*>
+  <!ELEMENT policy (#PCDATA)>
+  <!ATTLIST policy domain (coder|filter|path|resource) #REQUIRED>
+  <!ATTLIST policy name CDATA #IMPLIED>
+  <!ATTLIST policy rights (none|read|write|execute) #REQUIRED>
+  <!ATTLIST policy pattern CDATA #IMPLIED>
+  <!ATTLIST policy value CDATA #IMPLIED>
+]>
+<policymap>
+  <!-- Allow all rights for coder domain -->
+  <policy domain="coder" rights="read|write" pattern="{PNG,JPEG,MP4,TXT}" />
+  <!-- Allow temporary file operations -->
+  <policy domain="path" rights="read|write" pattern="/tmp/*" />
+  <!-- Increase resource limits if needed -->
+  <policy domain="resource" name="memory" value="256MiB"/>
+  <policy domain="resource" name="map" value="512MiB"/>
+  <policy domain="resource" name="width" value="16KP"/>
+  <policy domain="resource" name="height" value="16KP"/>
+  <policy domain="resource" name="area" value="128MB"/>
+  <policy domain="resource" name="disk" value="1GiB"/>
+</policymap>

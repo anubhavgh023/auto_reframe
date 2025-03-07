@@ -79,36 +79,37 @@ async def process_video(request: VideoRequest):
         print("----------------------------------")
 
         # Step 1: Download video
-        try:
-            download_video(request.youtubeLink)
-        except Exception as download_error:
-            if "Video exceeds 45-minute time limit" in str(download_error):
-                raise HTTPException(
-                    status_code=400,
-                    detail="Video duration exceeds 45-minute limit"
-                )
-            raise  # Re-raise other download errors
+        # try:
+        #     download_video(request.youtubeLink)
+        # except Exception as download_error:
+        #     if "Video exceeds 45-minute time limit" in str(download_error):
+        #         raise HTTPException(
+        #             status_code=400,
+        #             detail="Video duration exceeds 45-minute limit"
+        #         )
+        #     raise  # Re-raise other download errors
 
         # # Step 2: Process curation
-        print("Processing curation...")
+        print("STEP 2: Processing curation...")
         curation_processing(duration=request.duration,numOfShorts=request.numOfshorts)
 
         # # Step 3: Generate transitions and process videos
-        print("Generating transition data...")
+        print("STEP 3: Generating transition data...")
         generate_transitions_json()
         print("\nProcessing videos...")
         process_videos()
 
         # # Step 4: Process subtitles
         # You might want to pass fontStyle and language to this function
-        print(f"Processing subtitles with font: {request.fontStyle}")
+        print(f"STEP 4: Processing subtitles with font: {request.fontStyle}")
         process_subtitles(request.fontStyle)
 
         # # Step 5: Add background music
+        print("STEP 5: Adding bg music")
         process_background_music()
 
         # # Step 6: Clean up
-        clean_files()
+        # clean_files()
 
         return {
             "status": "success",
