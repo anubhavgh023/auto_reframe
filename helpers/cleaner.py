@@ -60,7 +60,7 @@ import shutil
 # Global list of files/directories that should not be deleted during cleanup
 PRESERVED_FILES = [
     "final_video_with_bg",  # Directory with final videos
-    "bg_1.mp3",  # Background music file
+    "final_videos",
 ]
 
 
