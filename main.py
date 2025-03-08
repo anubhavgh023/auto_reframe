@@ -109,14 +109,13 @@
 #     return {"message": "Welcome to the Video Processing API"}
 
 
-# --------------------------------
-
-
+# -----------------------------
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Literal, Optional
 import os
 import glob
+import shutil
 
 # Import your existing functions
 from s1_yt_down.yt_download import download_video
@@ -129,7 +128,6 @@ from helpers.aws_uploader import upload_to_s3
 
 app = FastAPI()
 
-
 # Define request body model
 class VideoRequest(BaseModel):
     youtubeLink: str
@@ -140,7 +138,6 @@ class VideoRequest(BaseModel):
     fontStyle: str
     captions: bool
     bgm: Optional[str] = None  # Optional field, defaults to None
-
 
 @app.post("/process-video")
 async def process_video(request: VideoRequest):
@@ -161,18 +158,18 @@ async def process_video(request: VideoRequest):
         print(f"Request: {request}")
         print("----------------------------------")
 
-        # # Step 1: Download video
-        # print("----------------------------------")
-        # print("STEP 1: Downloading video...")
-        # try:
-        #     download_video(request.youtubeLink)
-        # except Exception as download_error:
-        #     if "Video exceeds 45-minute time limit" in str(download_error):
-        #         raise HTTPException(
-        #             status_code=400, detail="Video duration exceeds 45-minute limit"
-        #         )
-        #     raise  # Re-raise other download errors
-        # print("----------------------------------")
+        # Step 1: Download video
+        print("----------------------------------")
+        print("STEP 1: Downloading video...")
+        try:
+            download_video(request.youtubeLink)
+        except Exception as download_error:
+            if "Video exceeds 45-minute time limit" in str(download_error):
+                raise HTTPException(
+                    status_code=400, detail="Video duration exceeds 45-minute limit"
+                )
+            raise  # Re-raise other download errors
+        print("----------------------------------")
 
         # Step 2: Process curation
         print("----------------------------------")
@@ -196,7 +193,8 @@ async def process_video(request: VideoRequest):
             print("Skipping STEP 3 (reframe=False)")
             print("----------------------------------")
 
-        # Step 4: Process subtitles (only if captions=True)
+        # Step 4: Process subtitles or move files (based on captions)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         if request.captions:
             print("----------------------------------")
             print(f"STEP 4: Processing subtitles with font: {request.fontStyle}")
@@ -204,7 +202,31 @@ async def process_video(request: VideoRequest):
             print("----------------------------------")
         else:
             print("----------------------------------")
-            print("Skipping STEP 4 (captions=False)")
+            print("Skipping STEP 4 (captions=False), moving curated videos...")
+            if request.reframe:
+                source_dir = os.path.join(script_dir, "s2_curation/assets/processed_shorts")
+            else:
+                source_dir = os.path.join(script_dir, "s2_curation/assets/curated_videos")
+                
+            dest_dir = os.path.join(script_dir, "downloads/final_videos")
+            
+            # Ensure destination directory exists
+            os.makedirs(dest_dir, exist_ok=True)
+            
+            # Find all curated videos
+            curated_videos = sorted(
+                glob.glob(os.path.join(source_dir, "curated_vid_*.mp4")),
+                key=lambda x: int(os.path.basename(x).split("_")[-1].split(".")[0])
+            )
+            
+            if not curated_videos:
+                print(f"No curated videos found in {source_dir}")
+            else:
+                for i, video in enumerate(curated_videos, 1):
+                    src_path = video
+                    dest_path = os.path.join(dest_dir, f"final_video_{i}.mp4")
+                    shutil.move(src_path, dest_path)
+                    print(f"Moved: {os.path.basename(src_path)} -> {os.path.basename(dest_path)}")
             print("----------------------------------")
 
         # Step 5: Add background music (only if bgm is provided and not empty)
@@ -221,8 +243,7 @@ async def process_video(request: VideoRequest):
         # Step 6: Upload to S3 and collect presigned URLs
         print("----------------------------------")
         print("STEP 6: Uploading to S3...")
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-
+        
         # Determine the source folder based on bgm
         if request.bgm and request.bgm.strip():
             video_dir = os.path.join(script_dir, "downloads/final_video_with_bg")
@@ -266,7 +287,6 @@ async def process_video(request: VideoRequest):
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
-
 
 # Optional: Add a root endpoint
 @app.get("/")

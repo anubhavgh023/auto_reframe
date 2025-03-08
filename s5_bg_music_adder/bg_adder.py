@@ -175,7 +175,7 @@ def process_background_music(bgm: str):
     input_dir = os.path.join(script_dir, "../downloads/final_videos")
 
     # Validate bgm parameter
-    bg_music_dir = os.path.join(script_dir, "../bg_music")
+    bg_music_dir = os.path.join(script_dir, "./bg_music")
     bg_music_path = os.path.join(bg_music_dir, f"{bgm}.mp3")
     if not os.path.exists(bg_music_path):
         print(

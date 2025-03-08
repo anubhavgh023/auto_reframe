@@ -441,4 +441,4 @@ def process_subtitles(reframe: bool, style_key="style1"):
 import numpy as np
 
 if __name__ == "__main__":
-    process_subtitles(reframe=False, style_key="style1")
+    process_subtitles(reframe=True, style_key="style1")
